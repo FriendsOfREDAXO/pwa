@@ -1,2 +1,3 @@
-# pwa
-Turn a REDAXO website into a PWA
+# PWA-AddOn für REDAXO 5
+
+* noch funktioniert nichts.... 

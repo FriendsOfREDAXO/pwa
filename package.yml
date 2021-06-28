@@ -1,0 +1,27 @@
+package: pwa
+version: "0.0.1"
+author: Friends Of REDAXO
+supportpage: https://github.com/FriendsOfREDAXO/demo_addon
+
+page:
+  title: "PWA"
+  icon: rex-icon fa-mobile
+  perm: admin
+
+  subpages:
+    config:
+      title: 'Einstellungen'
+      icon: rex-icon fa-wrench
+    help:
+      title: "Info"
+      icon: rex-icon fa-info
+      perm: pwa[]
+      subpages:
+        readme: { title: "README", subPath: "README.md" }
+        changelog: { title: "CHANGELOG", subPath: "CHANGELOG.md" }
+
+requires:
+  redaxo: "^5.10"
+installer_ignore:
+  - node_modules
+  - .env
