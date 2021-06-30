@@ -1,5 +1,5 @@
 package: pwa
-version: "0.0.2"
+version: "0.0.3"
 author: Friends Of REDAXO
 supportpage: https://github.com/FriendsOfREDAXO/demo_addon
 
@@ -7,7 +7,6 @@ page:
   title: "PWA"
   icon: rex-icon fa-mobile
   perm: admin
-
   subpages:
     config:
       title: 'Einstellungen'

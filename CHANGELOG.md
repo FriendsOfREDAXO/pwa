@@ -4,10 +4,12 @@
 
 * Erste Veröffentlichung des unfertigen AddOns
 
-## Version 0.0.2 // 30.06.2021
+## Version 0.0.3 // 30.06.2021
 
 * benötigte Media Manager Typen werden automatisch angelegt
 * README geändert
-* Fehler bei der Deinstalltion behoben
+* Fehler bei der Deinstallation behoben
+* Configs hinzugefügt
+* Weitere Änderungen :-)
 
 

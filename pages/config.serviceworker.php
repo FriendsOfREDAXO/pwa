@@ -12,13 +12,18 @@ $func = rex_request('func', 'string');
 
 if ($func == 'update') {
 
+    $this->setConfig(rex_post('config', [
+        ['pages_to_cache', 'array[int]']
+    ]));
+
+
 
     $service_worker = fopen("../service-worker.js", "w") or die("Unable to open file!");
     $service_worker_content =
 "self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open('sw-cache').then(function(cache) {
-            return cache.add('index.html');
+            return cache.add('/');
         })
     );
 });
@@ -35,6 +40,13 @@ self.addEventListener('fetch', function(event) {
     fclose($service_worker);
 
     echo rex_view::success('Die <b>service-worker.js</b> wurde ge- bzw. überschrieben.');
+    $this->setConfig('service-worker.js', true);
+    rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
+        $suchmuster= '<a href="index.php?page=pwa/config/serviceworker">service-worker.js <i style="color: #f00;" class="rex-icon fa-exclamation-triangle"></i></a>';
+        $ersetzen = '<a href="index.php?page=pwa/config/serviceworker">service-worker.js</a>';
+        $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+    });
+
 }
 
 

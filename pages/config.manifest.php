@@ -26,8 +26,7 @@ if ($func == 'update') {
         ['background_color', 'string'],
         ['theme_color', 'string'],
         ['generated', 'string'],
-        ['display', 'string'],
-        ['pages_to_cache', 'array[int]']
+        ['display', 'string']
     ]));
 
     echo rex_view::success('Die Einstellungen wurden gespeichert');
@@ -62,23 +61,38 @@ if ($func == 'update') {
 
         $manifest_content .= '"scope" : ".",';
 if($this->getConfig('image1024') !='' ) {
-        $manifest_content .= '
-"icons" : [
+
+
+    $mmtypes = explode(',',$addon->getConfig('image_formats'));
+
+    $manifest_content .= '
+"icons" : [';
+
+    foreach ($mmtypes as $size) {
+
+        if ($size == '196') {
+            $manifest_content .= '
     {
-        "src": "'.rex_media_manager::getUrl('pwa196',$this->getConfig('image1024')).'",
-        "sizes": "196x196",
+        "src": "' . rex_media_manager::getUrl('pwa' . $size, $this->getConfig('image1024')) . '",
+        "sizes": "'.$size.'x'.$size.'",
         "type": "image/png",
         "purpose": "any maskable"
-    },        
+    }';
+        } else {
+            $manifest_content .= '
     {
-        "src": "'.rex_media_manager::getUrl('pwa256',$this->getConfig('image1024')).'",
-        "sizes": "256x256"
-    },
-    {
-        "src": "'.rex_media_manager::getUrl('pwa512',$this->getConfig('image1024')).'",
-        "sizes": "512x512"
+        "src": "' . rex_media_manager::getUrl('pwa' . $size, $this->getConfig('image1024')) . '",
+        "sizes": "'.$size.'x'.$size.'",
+    }';
+        }
+        if(next($mmtypes)) {
+            $manifest_content .= ',';
+        }
     }
-]';
+    $manifest_content .= '
+  ],
+  "splash_pages": null
+}';
 }
 
         $manifest_content .= '}'."\n";
@@ -87,6 +101,14 @@ if($this->getConfig('image1024') !='' ) {
         fclose($manifest);
 
         echo rex_view::success('Die <b>manifest.json</b> wurde ge- bzw. überschrieben.');
+        $this->setConfig('manifest.json', true);
+        rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
+            $suchmuster = '  <a href="index.php?page=pwa/config/manifest">manifest.json <i style="color: #f00;" class="rex-icon fa-exclamation-triangle"></i></a>';
+            $ersetzen = '<a href="index.php?page=pwa/config/manifest">manifest.json</a>';
+            $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+        });
+
+
     } else {
         echo rex_view::error('Die <b>manifest.json</b> wurde nicht erstellt. <b>Bitte prüfe alle Angaben!</b>');
     }
@@ -274,7 +296,7 @@ $error = $this->getConfig('background_color') == '' ? 'error' : '';
 
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="short_name">Background Color<sup>*</sup></label>';
+$n['label'] = '<label for="background_color">Background Color<sup>*</sup></label>';
 $n['field'] = '<input class="colorpicker '.$error.'" type="color" id="colorpicker_background" name="config[background_color]" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('background_color').'"><input class="form-control color '.$error.'" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('background_color').'" id="hexcolor-background"></input>';
 
 $formElements[] = $n;
@@ -288,7 +310,7 @@ $error = $this->getConfig('theme_color') == '' ? 'error' : '';
 
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="short_name">Theme Color<sup>*</sup></label>';
+$n['label'] = '<label for="theme_color">Theme Color<sup>*</sup></label>';
 $n['field'] = '<input class="colorpicker '.$error.'" type="color" id="colorpicker_theme" name="config[theme_color]" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('theme_color').'"><input class="form-control color '.$error.'" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('theme_color').'" id="hexcolor-theme"></input>';
 $formElements[] = $n;
 
@@ -301,7 +323,7 @@ $error = $this->getConfig('generated') == '' ? 'error' : '';
 
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="short_name">Generated<sup>*</sup></label>';
+$n['label'] = '<label for="generated">Generated<sup>*</sup></label>';
 $n['field'] = '<input class="colorpicker '.$error.'" type="color" id="colorpicker_generated" name="config[generated]" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('generated').'"><input class="form-control color '.$error.'" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('generated').'" id="hexcolor-generated"></input>';
 $formElements[] = $n;
 
@@ -532,7 +554,7 @@ $content .= '<legend>Display Mode';
 $content .= '<a class="help-block rex-note" data-toggle="modal" href="#display_mode_modal">(Mehr Informationen)</a>';
 $content .= '</legend>';
 
-$error = $this->getConfig('display_mode') == '' ? 'error' : '';
+$error = $this->getConfig('display') == '' ? 'error' : '';
 
 $formElements = [];
 $n = [];

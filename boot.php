@@ -9,6 +9,21 @@ if (rex::isBackend() && is_object(rex::getUser())) {
 
 if (rex::isBackend() && rex::getUser()) {
 
+    if($addon->getConfig('manifest.json') == false){
+        rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
+            $suchmuster = '<a href="index.php?page=pwa/config/manifest">manifest.json</a>';
+            $ersetzen = '  <a href="index.php?page=pwa/config/manifest">manifest.json <i style="color: #f00;" class="rex-icon fa-exclamation-triangle"></i></a>';
+            $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+        });
+    }
+    if($addon->getConfig('service-worker.js') == false){
+        rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
+            $suchmuster = '<a href="index.php?page=pwa/config/serviceworker">service-worker.js</a>';
+            $ersetzen = '<a href="index.php?page=pwa/config/serviceworker">service-worker.js <i style="color: #f00;" class="rex-icon fa-exclamation-triangle"></i></a>';
+            $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+        });
+    }
+
 }
 
 if (rex::isFrontend()) {

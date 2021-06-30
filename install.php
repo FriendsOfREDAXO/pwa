@@ -3,7 +3,14 @@
 $addon = rex_addon::get('pwa');
 
 if (!$addon->hasConfig()) {
-    $addon->setConfig('image_formats', '16,32,64,192,196,256,512,1024');
+    $addon->setConfig('image_formats', '16,32,64,72,96,128,144,152,192,196,256,384,512,1024');
+    $addon->setConfig('background_color', '#ffffff');
+    $addon->setConfig('theme_color', '#ffffff');
+    $addon->setConfig('generated', '#ffffff');
+    $addon->setConfig('lang', 'de_DE');
+
+    $addon->setConfig('service-worker.js', false);
+    $addon->setConfig('mainfest.json', false);
 }
 
 $mmtypes = explode(',',$addon->getConfig('image_formats'));

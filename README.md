@@ -1,6 +1,10 @@
 ## PWA-AddOn für REDAXO 5
 
-* noch funktioniert nichts.... 
+### Allgemeines
+
+* noch funktioniert nichts 100%ig 
+
+---
 
 ### Weitere Ideen
 
@@ -18,19 +22,23 @@
 ### Mögliche Fehler
 
 * es wird schon schon eine manifest Dateigeladen (evtl. mit anderen Namen wie z.B. 'site.webmanifest')
----
 
+---
 
 ### Lizenz
 
-siehe [LICENSE.md](LICENSE.md)
+-  [MIT / Friends Of REDAXO](https://github.com/FriendsOfREDAXO/pwa/blob/main/LICENSE.md)
+
+
+---
 
 ### Autor
 
-**Friends Of REDAXO**
+- [Friends Of REDAXO](https://github.com/FriendsOfREDAXO)
+- [REDAXO](http://www.redaxo.org)
 
-* http://www.redaxo.org
-* https://github.com/FriendsOfREDAXO
+
+---
 
 **Projekt-Lead**
 
