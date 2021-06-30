@@ -1,8 +1,8 @@
-# PWA-AddOn für REDAXO 5
+## PWA-AddOn für REDAXO 5
 
 * noch funktioniert nichts.... 
 
-# Ideen
+### Weitere Ideen
 
 * Caching und Caching-Policy wählbar
 * Caching auf Kategorie/Artikel-Ebene überschreibbar
@@ -14,6 +14,25 @@
 * Farben config vorausfüllen
 * manifest und serviceworker umbenennen?
 
-# Mögliche Fehler
+---
+### Mögliche Fehler
 
-* es gibt schon eine manifest.json (evtl. mit anderen Namen)
+* es wird schon schon eine manifest Dateigeladen (evtl. mit anderen Namen wie z.B. 'site.webmanifest')
+---
+
+
+### Lizenz
+
+siehe [LICENSE.md](LICENSE.md)
+
+### Autor
+
+**Friends Of REDAXO**
+
+* http://www.redaxo.org
+* https://github.com/FriendsOfREDAXO
+
+**Projekt-Lead**
+
+- [Oliver Kreischer](https://github.com/olien)
+
