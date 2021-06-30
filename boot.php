@@ -2,6 +2,10 @@
 
 $addon = rex_addon::get('pwa');
 
+rex_view::addCssFile($addon->getAssetsUrl('css/style.css'));
+rex_view::addJsFile($addon->getAssetsUrl('js/script.js'), [rex_view::JS_IMMUTABLE => true]);
+
+
 if (rex::isBackend() && is_object(rex::getUser())) {
     rex_perm::register('pwa[]');
     rex_perm::register('pwa[config]');

@@ -8,7 +8,6 @@
 
 ### ToDo
 
-* JS und CSS auslagern
 * service-worker Einstellungen berücksichtigen
 * WorkBox von Google einbinden? DSGVO???
 * Anleitung schreiben

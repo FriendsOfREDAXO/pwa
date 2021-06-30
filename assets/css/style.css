@@ -1,0 +1,131 @@
+.fieldsetwrapper_pwa {
+    border: 2px solid grey;
+    background: #f1f1f1;
+    padding: 20px;
+    margin: 0 0 10px 0;
+}
+
+.fieldsetwrapper_pwa .help-block {
+    font-size: 12px;
+    margin-left: 1rem;
+    display: inline-block;
+}
+
+.fieldsetwrapper_pwa .help-block.warning {
+    color: #f00;
+}
+
+.fieldsetwrapper_pwa .fb_check {
+    text-align: right;
+    zoom: 0.75;
+    margin: -90px 0 60px 0;
+}
+.fieldsetwrapper_pwa .colorpicker {
+    width: 60px;
+    height: 42px;
+    margin-right: 12px;
+    float: left;
+}
+.fieldsetwrapper_pwa .form-control.color {
+    margin-top: 3px;
+    width:  100px !important;
+    float: left;
+}
+
+
+.fieldsetwrapper_pwa .fb_check label input[type=checkbox].toggle {
+    margin-right: 8px;
+    margin-top: -1px;
+}
+
+.fieldsetwrapper_pwa label input[type=checkbox].toggle {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 3em;
+    height: 1.5em;
+    background: #ddd;
+    vertical-align: middle;
+    border-radius: 1.6em;
+    position: relative;
+    outline: 0;
+    margin-right: 16px;
+    cursor: pointer;
+    -webkit-transition: background 0.1s ease-in-out;
+    transition: background 0.1s ease-in-out;
+
+}
+.fieldsetwrapper_pwa label input[type=checkbox].toggle::after {
+    content: '';
+    width: 1.5em;
+    height: 1.5em;
+    background: white;
+    position: absolute;
+    border-radius: 1.2em;
+    -webkit-transform: scale(0.7);
+    transform: scale(0.7);
+    left: 0;
+    box-shadow: 0 1px rgba(0, 0, 0, 0.5);
+    -webkit-transition: left 0.1s ease-in-out;
+    transition: left 0.1s ease-in-out;
+}
+.fieldsetwrapper_pwa label input[type=checkbox].toggle:checked {
+    background: #5791CE;
+
+}
+.fieldsetwrapper_pwa label input[type=checkbox].toggle:checked::after {
+    left: 1.5em;
+}
+
+.fieldsetwrapper_pwa .modal {
+    background: rgb(42, 57, 70, 80%);
+
+}
+
+.fieldsetwrapper_pwa .modal-content {
+    width:100%;
+    background: #efefef;
+    border: 5px solid #555;
+}
+
+.fieldsetwrapper_pwa .modal-title {
+    padding: 0 16px 0 16px;
+}
+
+.fieldsetwrapper_pwa .modal-body {
+    padding: 32px;
+    background: #fafafa;
+}
+
+.fieldsetwrapper_pwa.green {
+    border: 1px solid green;
+}
+.fieldsetwrapper_pwa.orange {
+    border: 1px solid orange;
+}
+.fieldsetwrapper_pwa.red,
+.fieldsetwrapper_pwa .error {
+    border: 1px solid red;
+}
+
+.fieldsetwrapper_pwa.close {
+    padding-top: 8px;
+}
+
+.fieldsetwrapper_pwa a { outline: none !important; }
+
+.fieldsetwrapper_pwa .modal-dialog-centered {
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    align-items:center;
+    min-height:calc(100% - (.5rem * 2));
+}
+
+@media (min-width: 576px) {
+    .fieldsetwrapper_pwa .modal-dialog-centered {
+        min-height:calc(100% - (1.75rem * 2));
+    }
+}
