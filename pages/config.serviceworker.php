@@ -30,28 +30,31 @@ if ($func == 'update') {
     $pages_to_cache = $addon->getConfig('pages_to_cache');
 
     foreach ($pages_to_cache as $page) {
-        $pages .= "'".rex_geturl($page);
+        $pages .= 	"'".rex_geturl($page);
 
         if(next($pages_to_cache)) {
             $pages .= "',"."\n";
         } else {
-            $pages .= "'"."\n";
+            $pages .= "'";
         }
 
     }
 
-    dump($pages);
-
     $service_worker = fopen("../service-worker.js", "w") or die("Unable to open file!");
     $service_worker_content = "
+    
+this.addEventListener('fetch', function (event) {
+    // it can be empty if you just want to get rid of that error
+});   
+    
 this.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open('$version').then(function(cache) {
             return cache.addAll([
                 ".$pages." 
-            ]);
-        });
-    );
+            ])
+        })
+    )
 });";
 
     fwrite($service_worker, $service_worker_content);

@@ -59,41 +59,40 @@ if ($func == 'update') {
             $manifest_content .= '"start_url" : "/",'."\n";
         }
 
-        $manifest_content .= '"scope" : ".",';
-if($this->getConfig('image1024') !='' ) {
+        $manifest_content .= '"scope" : "'.rex::getServer().'",';
+        if($this->getConfig('image1024') !='' ) {
 
 
-    $mmtypes = explode(',',$addon->getConfig('image_formats'));
+            $mmtypes = explode(',',$addon->getConfig('image_formats'));
 
-    $manifest_content .= '
+            $manifest_content .= '
 "icons" : [';
 
-    foreach ($mmtypes as $size) {
+            foreach ($mmtypes as $size) {
 
-        if ($size == '196') {
-            $manifest_content .= '
+                if ($size == '196') {
+                    $manifest_content .= '
     {
         "src": "' . rex_media_manager::getUrl('pwa' . $size, $this->getConfig('image1024')) . '",
         "sizes": "'.$size.'x'.$size.'",
         "type": "image/png",
         "purpose": "any maskable"
     }';
-        } else {
-            $manifest_content .= '
+                } else {
+                    $manifest_content .= '
     {
         "src": "' . rex_media_manager::getUrl('pwa' . $size, $this->getConfig('image1024')) . '",
-        "sizes": "'.$size.'x'.$size.'",
+        "sizes": "'.$size.'x'.$size.'"
     }';
-        }
-        if(next($mmtypes)) {
-            $manifest_content .= ',';
-        }
-    }
-    $manifest_content .= '
+                }
+                if(next($mmtypes)) {
+                    $manifest_content .= ',';
+                }
+            }
+            $manifest_content .= '
   ],
-  "splash_pages": null
-}';
-}
+  "splash_pages": null';
+        }
 
         $manifest_content .= '}'."\n";
 

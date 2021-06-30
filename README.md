@@ -29,11 +29,11 @@
 
 ### manifgest.json
 
-* "scope" beücksichtigen
+* 
 
 ### service-worker.js
 
-* caching Dateien
+* Problem: caching Dateien
 * scope?
 
 ## Weitere Ideen

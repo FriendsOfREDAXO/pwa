@@ -42,23 +42,20 @@ if (rex::isFrontend()) {
     if($addon->getConfig('serviceworker_include_frontend') == 1) {
         rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
             $suchmuster = '</body>';
-            $ersetzen = '   
-           <script>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", function() {
-                    navigator.serviceWorker.register( "/service-worker.js").then(
-                        function(erfolg) {
-                        console.log( "Die ServiceWorker wurde registriert.", erfolg);
-                    }
-                    ).catch(
-                        function(fehler) {
-                            console.log( "Die ServiceWorker wurde leider nicht registriert.", fehler);
-                        }
-                    );
-                });
-            }
+            $ersetzen = "
+				<script>
+					if ('serviceWorker' in navigator) {
+					  // declaring scope manually
+					  navigator.serviceWorker.register('/service-worker.js', {scope: './'}).then(function(registration) {
+					    console.log('Service worker registration succeeded:', registration);
+					  }, /*catch*/ function(error) {
+					    console.log('Service worker registration failed:', error);
+					  });
+					} else {
+					  console.log('Service workers are not supported.');
+					}
             </script>
-        </body>';
+        </body>";
             $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
         });
     }
