@@ -140,8 +140,8 @@ $content .= '<fieldset>';
 
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="version">Version';
-$n['field'] = '<input class="form-control red" type="text" id="version" name="config[version]" placeholder="" value="' . $this->getConfig('version') . '"/>';
+$n['label'] = '<label for="version">Version</label>';
+$n['field'] = '<input class="form-control " type="text" id="version" name="config[version]" placeholder="" value="' . $this->getConfig('version') . '"/>';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
@@ -422,59 +422,6 @@ $content .= '</div>';
 
 
 // --------
-// -------- EINBINDUNG
-// --------
-
-$content .= '<div class="fieldsetwrapper_pwa green">';
-$content .= '<fieldset>';
-$content .= '<legend>Einbindung';
-$content .= '<a class="help-block rex-note" data-toggle="modal" href="#includes">(Mehr Informationen)</a>';
-$content .= '</legend>';
-
-
-$formElements = [];
-$n = [];
-$n['label'] = '<label><b>manifest.json</b> im Frontent laden</label>';
-$n['field'] = '<input type="checkbox" class="toggle" id="manifest_include_frontend" name="config[manifest_include_frontend]"' . (!empty($this->getConfig('manifest_include_frontend')) && $this->getConfig('manifest_include_frontend') == '1' ? ' checked="checked"' : '') . ' value="1" />';
-$formElements[] = $n;
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/checkbox.php');
-$content .= '</fieldset>';
-
-
-$formElements = [];
-$n = [];
-$n['label'] = '<label><b>service-worker.js</b> im Frontent laden</label>';
-$n['field'] = '<input type="checkbox" class="toggle" id="serviceworker_include_frontend" name="config[serviceworker_include_frontend]"' . (!empty($this->getConfig('serviceworker_include_frontend')) && $this->getConfig('serviceworker_include_frontend') == '1' ? ' checked="checked"' : '') . ' value="1" />';
-$formElements[] = $n;
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/checkbox.php');
-$content .= '</fieldset>';
-
-$content .= ' 
-<div class="modal fade" id="includes" tabindex="-1" >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Einbindung
-        <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
-        </h2>
-      </div>
-     <div class="modal-body"> 
-            <p>Sollicitudin amet mollis ligula nibh viverra penatibus ultricies varius elementum nam aliquam congue inceptos, etiam quis urna elit dis ridiculus molestie consectetur orci lacus eros fames. Lectus ornare mollis dictumst gravida class habitasse elit dis, vel facilisis quis tincidunt augue dolor sit aenean consectetur, praesent vulputate feugiat ipsum facilisi felis etiam.</p>
-       </div>      
-    </div>
-  </div>
-</div>
-';
-
-$content .= '</div>';
-
-
-
-// --------
 // -------- Orientation
 // --------
 
@@ -609,6 +556,59 @@ $content .= '
 ';
 
 $content .= '</div>';
+
+
+// --------
+// -------- EINBINDUNG
+// --------
+
+$content .= '<div class="fieldsetwrapper_pwa green">';
+$content .= '<fieldset>';
+$content .= '<legend>Einbindung';
+$content .= '<a class="help-block rex-note" data-toggle="modal" href="#includes">(Mehr Informationen)</a>';
+$content .= '</legend>';
+
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label><b>manifest.json</b> im Frontent laden</label>';
+$n['field'] = '<input type="checkbox" class="toggle" id="manifest_include_frontend" name="config[manifest_include_frontend]"' . (!empty($this->getConfig('manifest_include_frontend')) && $this->getConfig('manifest_include_frontend') == '1' ? ' checked="checked"' : '') . ' value="1" />';
+$formElements[] = $n;
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/checkbox.php');
+$content .= '</fieldset>';
+
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label><b>service-worker.js</b> im Frontent laden</label>';
+$n['field'] = '<input type="checkbox" class="toggle" id="serviceworker_include_frontend" name="config[serviceworker_include_frontend]"' . (!empty($this->getConfig('serviceworker_include_frontend')) && $this->getConfig('serviceworker_include_frontend') == '1' ? ' checked="checked"' : '') . ' value="1" />';
+$formElements[] = $n;
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/checkbox.php');
+$content .= '</fieldset>';
+
+$content .= ' 
+<div class="modal fade" id="includes" tabindex="-1" >
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Einbindung
+        <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+        </h2>
+      </div>
+     <div class="modal-body"> 
+            <p>Sollicitudin amet mollis ligula nibh viverra penatibus ultricies varius elementum nam aliquam congue inceptos, etiam quis urna elit dis ridiculus molestie consectetur orci lacus eros fames. Lectus ornare mollis dictumst gravida class habitasse elit dis, vel facilisis quis tincidunt augue dolor sit aenean consectetur, praesent vulputate feugiat ipsum facilisi felis etiam.</p>
+       </div>      
+    </div>
+  </div>
+</div>
+';
+
+$content .= '</div>';
+
 
 
 $formElements = [];

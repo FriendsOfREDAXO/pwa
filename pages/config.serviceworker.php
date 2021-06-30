@@ -1,8 +1,11 @@
 <?php
 
-$content = '';
-$version = '';
-$error  =  '';
+
+
+$content    = '';
+$version    = '';
+$error      = '';
+$pages      = '';
 $date = new DateTime();
 
 
@@ -13,26 +16,41 @@ $func = rex_request('func', 'string');
 if ($func == 'update') {
 
     $this->setConfig(rex_post('config', [
+        ['version_sw', 'string'],
         ['pages_to_cache', 'array[int]']
     ]));
 
+    if($this->getConfig('version_sw') != '') {
+        $version = $this->getConfig('version_sw');
+    } else {
+        $version = $date->getTimestamp();
 
+    }
+
+    $pages_to_cache = $addon->getConfig('pages_to_cache');
+
+    foreach ($pages_to_cache as $page) {
+        $pages .= "'".rex_geturl($page);
+
+        if(next($pages_to_cache)) {
+            $pages .= "',"."\n";
+        } else {
+            $pages .= "'"."\n";
+        }
+
+    }
+
+    dump($pages);
 
     $service_worker = fopen("../service-worker.js", "w") or die("Unable to open file!");
-    $service_worker_content =
-"self.addEventListener('install', function(event) {
+    $service_worker_content = "
+this.addEventListener('install', function(event) {
     event.waitUntil(
-        caches.open('sw-cache').then(function(cache) {
-            return cache.add('/');
-        })
-    );
-});
-
-self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        caches.match(event.request).then(function(response) {
-            return response || fetch(event.request);
-        })
+        caches.open('$version').then(function(cache) {
+            return cache.addAll([
+                ".$pages." 
+            ]);
+        });
     );
 });";
 
@@ -49,6 +67,46 @@ self.addEventListener('fetch', function(event) {
 
 }
 
+
+// --------
+// -------- Allgemeines
+// --------
+
+$content .= '<div class="fieldsetwrapper_pwa green">';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="version">Version</label>';
+$n['field'] = '<input class="form-control " type="text" id="version" name="config[version_sw]" placeholder="" value="'.$this->getConfig('version_sw').'"/>';
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/form.php');
+
+
+
+$content .= '</fieldset>';
+$content .= ' 
+<div class="modal fade" id="name_modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Allgemeines
+        <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+        </h2>
+      </div>
+     <div class="modal-body">
+            <p><b>Version</b><br/>
+                Sofern keine Version angegeben wird wird hier bei jeden "speichern" ein Timestamp gesetzt.
+            </p>
+       </div>      
+    </div>
+  </div>
+</div>
+';
+
+$content .= '</div>';
 
 
 

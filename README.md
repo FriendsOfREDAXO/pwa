@@ -5,7 +5,7 @@
 ### Allgemeines
 
 * Was ist eine PWA?
-* Welchen Sinnm macht dieses AddOn?
+* Welchen Sinn macht dieses AddOn?
 
  
 
@@ -17,6 +17,8 @@
 
 ## ToDo
 
+### Allgemeines
+
 * Reihenfolge und Zusammenfassung der Werte in den Einstellungseiten überdenken
 * Modale füllen
 * Ausgabe "sortieren"
@@ -25,6 +27,14 @@
 * testen, testen, testen
 * Anleitung schreiben
 
+### manifgest.json
+
+* "scope" beücksichtigen
+
+### service-worker.js
+
+* caching Dateien
+* scope?
 
 ## Weitere Ideen
 
@@ -34,6 +44,7 @@
 * Default fixed positionierter Button for iOS ein- und ausschaltbar
 * Kopplung an YCom für Intranet Features
 * Mehrsprachigkeit berücksichtigen
+* Multidomains berücksichtigen... wie?
 
 
 ## Sonstiges
@@ -51,5 +62,5 @@
 
 ### Projekt-Lead
 
-- [Oliver Kreischer](https://github.com/olien)
+- [Oliver Kreischer / getaweb GmbH](https://www.getaweb.de)
 
