@@ -16,16 +16,23 @@ if ($func == 'update') {
         ['manifest_include_frontend', 'int'],
         ['serviceworker_include_frontend', 'int'],
         ['version', 'string'],
-        ['image512', 'string'],
+        ['image1024', 'string'],
         ['name', 'string'],
         ['short_name', 'string'],
         ['description', 'string'],
-        ['display_mode', 'string']
+        ['lang', 'string'],
+        ['start_url', 'string'],
+        ['orientation', 'string'],
+        ['background_color', 'string'],
+        ['theme_color', 'string'],
+        ['generated', 'string'],
+        ['display', 'string'],
+        ['pages_to_cache', 'array[int]']
     ]));
 
     echo rex_view::success('Die Einstellungen wurden gespeichert');
 
-    if($this->getConfig('name') != '' AND $this->getConfig('short_name') != '' AND $this->getConfig('display_mode') != '' AND $this->getConfig('image512') != '') {
+    if($this->getConfig('name') != '' AND $this->getConfig('short_name') != '' AND $this->getConfig('display') != '' AND $this->getConfig('image1024') != ''  AND $this->getConfig('lang') != '' AND $this->getConfig('orientation')) {
 
         if($this->getConfig('version') != '') {
             $version = $this->getConfig('version');
@@ -40,43 +47,40 @@ if ($func == 'update') {
         $manifest_content .= '"name" : "'.$this->getConfig('name').'",'."\n";
         $manifest_content .= '"short_name" : "'.$this->getConfig('short_name').'",'."\n";
         $manifest_content .= '"description" : "'.$this->getConfig('description').'",'."\n";
-        $manifest_content .= '"lang" : "de-DE",
-        "start_url" : "/",
-        "scope" : "/",
-        "display" : "standalone",
-        "orientation" : "portrait",
-        "background_color" : "#fff",
-        "theme_color" : "#000",
-        "generated" : "fff",
-        "icons" : [
-        {
-                "src": "https://kreischer.de/icon16.png",
-                "sizes": "16x16"
-        },
-        {
-            "src": "https://kreischer.de/icon192.png",
-            "sizes": "192x192"
-        },
-	    {
-	      "src": "https://kreischer.de/icon196.png",
-	      "sizes": "196x196",
-	      "type": "image/png",
-	      "purpose": "any maskable"
-	    },        
-        {
-            "src": "https://kreischer.de/icon256.png",
-            "sizes": "256x256"
-        },
-        {
-            "src": "https://kreischer.de/icon512.png",
-            "sizes": "512x512"
+        $manifest_content .= '"lang" : "'.$this->getConfig('lang').'",'."\n";
+        $manifest_content .= '"display" : "'.$this->getConfig('display').'",'."\n";
+        $manifest_content .= '"orientation" : "'.$this->getConfig('orientation').'",'."\n";
+        $manifest_content .= '"background_color" : "'.$this->getConfig('background_color').'",'."\n";
+        $manifest_content .= '"theme_color" : "'.$this->getConfig('theme_color').'",'."\n";
+        $manifest_content .= '"generated" : "'.$this->getConfig('generated').'",'."\n";
+
+        if($this->getConfig('start_url') !='' ) {
+            $manifest_content .= '"start_url" : "'.rex_geturl($this->getConfig('start_url')).'",'."\n";
+        } else {
+            $manifest_content .= '"start_url" : "/",'."\n";
         }
-	]
-    
-    ';
-    
-    
-    
+
+        $manifest_content .= '"scope" : ".",';
+if($this->getConfig('image1024') !='' ) {
+        $manifest_content .= '
+"icons" : [
+    {
+        "src": "'.rex_media_manager::getUrl('pwa196',$this->getConfig('image1024')).'",
+        "sizes": "196x196",
+        "type": "image/png",
+        "purpose": "any maskable"
+    },        
+    {
+        "src": "'.rex_media_manager::getUrl('pwa256',$this->getConfig('image1024')).'",
+        "sizes": "256x256"
+    },
+    {
+        "src": "'.rex_media_manager::getUrl('pwa512',$this->getConfig('image1024')).'",
+        "sizes": "512x512"
+    }
+]';
+}
+
         $manifest_content .= '}'."\n";
 
         fwrite($manifest, $manifest_content);
@@ -104,18 +108,18 @@ if($this->getConfig('name') != '' AND $this->getConfig('short_name') != '') {
 
 
 $content .= '<fieldset>';
-$content .= '<legend>Name';
+$content .= '<legend>Allgemeines';
 $content .= '<a class="help-block rex-note" data-toggle="modal" href="#name_modal">(Mehr Informationen)</a>';
 $content .= '</legend>';
 
 
-$content .= '<fieldset id="name">';
+$content .= '<fieldset>';
 
 
 $formElements = [];
 $n = [];
 $n['label'] = '<label for="version">Version';
-$n['field'] = '<input class="form-control red" type="text" id="name" name="config[version]" placeholder="" value="' . $this->getConfig('version') . '"/>';
+$n['field'] = '<input class="form-control red" type="text" id="version" name="config[version]" placeholder="" value="' . $this->getConfig('version') . '"/>';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
@@ -128,7 +132,7 @@ $error = $this->getConfig('name') == '' ? 'error' : '';
 $formElements = [];
 $n = [];
 $n['label'] = '<label for="name" >Name<sup>*</sup></label>';
-$n['field'] = '<input class="form-control '.$error.'" type="text" id="name" name="config[name]" placeholder="Bitte ausfüllen" value="' . $this->getConfig('name') . '" required />';
+$n['field'] = '<input class="form-control '.$error.'" type="text" id="name" name="config[name]" placeholder="Bitte ausfüllen" value="' . $this->getConfig('name') . '"  required maxlength="45" />';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
@@ -136,12 +140,10 @@ $fragment->setVar('elements', $formElements, false);
 $content .= $fragment->parse('core/form/form.php');
 
 
-$error = $this->getConfig('short_name') == '' ? 'error' : '';
-
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="short_name" >Kurzer Name<sup>*</sup></label>';
-$n['field'] = '<input class="form-control '.$error.'" type="text" id="short_name" name="config[short_name]" placeholder="Bitte ausfüllen" value="' . $this->getConfig('short_name') . '" required />';
+$n['label'] = '<label for="short_name" >Kurzer Name</label>';
+$n['field'] = '<input class="form-control '.$error.'" type="text" id="short_name" name="config[short_name]" placeholder="Bitte ausfüllen" value="' . $this->getConfig('short_name') . '"  />';
 $formElements[] = $n;
 
 
@@ -155,6 +157,20 @@ $n['label'] = '<label for="short_name">Beschreibung</label>';
 $n['field'] = '<input class="form-control" type="text" id="description" name="config[description]" placeholder="Bitte ausfüllen" value="' . $this->getConfig('description') . '"/>';
 $formElements[] = $n;
 
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/form.php');
+
+
+$error = $this->getConfig('lang') == '' ? 'error' : '';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="short_name">Sprache<sup>*</sup></label>';
+$n['field'] = '<input class="form-control '.$error.'" type="text" id="lang" name="config[lang]" placeholder="Bitte ausfüllen (Bsp: de_DE)" value="' . $this->getConfig('lang') . '"/>';
+$formElements[] = $n;
+
+
 
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);
@@ -167,17 +183,73 @@ $content .= '
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">Name
+        <h2 class="modal-title">Allgemeines
         <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
         </h2>
       </div>
      <div class="modal-body">
+            <p><b>Version</b><br/>
+                Sofern keine Version angegeben wird wird hier bei jeden "speichern" ein Timestamp gesetzt.
+            </p>
             <p><b>Name</b><br/>
-            Die Seite kann nicht in einem iFrame eingebettet werden, egal welches die aufrufende Webseite ist.</p>
-            <p><b>Kuruzname</b><br/>
-            Die Seite kann nur als iFrame eingebettet werden, wenn beide von der gleichen Quellseite stammen.
-            <p><b>allow-from uri</b><br/>
-            Die Seite lässt sich ausschließlich dann einbetten, wenn die einbettende Seite aus der Quelle uri stammt.</p>
+                Der Name der PWA (maximal 45 Zeichen) ist der primäre Bezeichner und ist ein Pflichtfeld.
+            </p>
+            <p><b>Kurzname</b><br/>
+                Der Kurzname (maximal 12 Zeichen empfohlen) ist eine Kurzversion des Namens der PWA. Es ist ein optionales Feld und wenn es nicht angegeben wird, wird der Name verwendet, obwohl er wahrscheinlich abgeschnitten wird. Der Kurzname wird normalerweise verwendet, wenn nicht genügend Platz für die Anzeige des vollständigen Namens vorhanden ist. 
+            </p>
+            <p><b>Beschreibung</b><br/>
+                Hier kann die PWA beschrieben werden.
+            </p>
+       </div>      
+    </div>
+  </div>
+</div>
+';
+
+$content .= '</div>';
+
+// --------
+// -------- Startseite
+// --------
+
+
+$content .= '<div class="fieldsetwrapper_pwa green">';
+$content .= '<fieldset>';
+$content .= '<legend>Startseite';
+$content .= '<a class="help-block rex-note" data-toggle="modal" href="#startseite">(Mehr Informationen)</a>';
+$content .= '</legend>';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="start_url">Startseite</label>';
+$category_select = new rex_category_select(false, false, true, true);
+$category_select->setName('config[start_url]');
+$category_select->setId('start_url');
+$category_select->setSize('1');
+$category_select->setAttribute('data-size', '1');
+$category_select->setSelected($this->getConfig('start_url'));
+$n['field'] = $category_select->get();
+$formElements[] = $n;
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/container.php');
+
+
+$content .= '</fieldset>';
+
+$content .= ' 
+<div class="modal fade" id="startseite" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Startseite
+        <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+        </h2>
+      </div>
+     <div class="modal-body">
+            <p>
+                Egestas id vulputate magna in tempus porttitor ligula sit, senectus parturient himenaeos ultricies per ut sagittis varius, arcu aptent elit vestibulum potenti adipiscing nisi.
+            </p>
        </div>      
     </div>
   </div>
@@ -187,7 +259,75 @@ $content .= '
 $content .= '</div>';
 
 
+// --------
+// -------- Farben
+// --------
 
+$content .= '<div class="fieldsetwrapper_pwa green">';
+$content .= '<fieldset>';
+$content .= '<legend>Farben';
+$content .= '<a class="help-block rex-note" data-toggle="modal" href="#farben">(Mehr Informationen)</a>';
+$content .= '</legend>';
+
+
+$error = $this->getConfig('background_color') == '' ? 'error' : '';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="short_name">Background Color<sup>*</sup></label>';
+$n['field'] = '<input class="colorpicker '.$error.'" type="color" id="colorpicker_background" name="config[background_color]" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('background_color').'"><input class="form-control color '.$error.'" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('background_color').'" id="hexcolor-background"></input>';
+
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/container.php');
+
+
+$error = $this->getConfig('theme_color') == '' ? 'error' : '';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="short_name">Theme Color<sup>*</sup></label>';
+$n['field'] = '<input class="colorpicker '.$error.'" type="color" id="colorpicker_theme" name="config[theme_color]" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('theme_color').'"><input class="form-control color '.$error.'" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('theme_color').'" id="hexcolor-theme"></input>';
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/container.php');
+
+
+$error = $this->getConfig('generated') == '' ? 'error' : '';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="short_name">Generated<sup>*</sup></label>';
+$n['field'] = '<input class="colorpicker '.$error.'" type="color" id="colorpicker_generated" name="config[generated]" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('generated').'"><input class="form-control color '.$error.'" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="'.$this->getConfig('generated').'" id="hexcolor-generated"></input>';
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/container.php');
+
+
+$content .= ' 
+<div class="modal fade" id="farben" tabindex="-1" >
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Farben
+        <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+        </h2>
+      </div>
+     <div class="modal-body"> 
+            <p>Dictumst odio taciti nulla metus sagittis condimentum</p>
+       </div>      
+    </div>
+  </div>
+</div>
+';
+
+$content .= '</div>';
 
 
 
@@ -202,17 +342,17 @@ $content .= '<a class="help-block rex-note" data-toggle="modal" href="#images">(
 $content .= '</legend>';
 
 
-$error = $this->getConfig('image512') == '' ? 'error' : '';
+$error = $this->getConfig('image1024') == '' ? 'error' : '';
 
 // Dateiauswahl Medienpool-Widget
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="REX_MEDIA_1">Bild 512px x 512px</label>';
+$n['label'] = '<label for="REX_MEDIA_1">Bild<sup>*</sup> (PNG 1024px x 1024px)</label>';
 
 $n['field'] = '
 <div class="rex-js-widget rex-js-widget-media">
 	<div class="input-group '.$error.'">
-		<input class="form-control" type="text" name="config[image512]" value="' . $this->getConfig('image512') . '" id="REX_MEDIA_1" readonly="readonly">
+		<input class="form-control" type="text" name="config[image1024]" value="' . $this->getConfig('image1024') . '" id="REX_MEDIA_1" readonly="readonly">
 		<span class="input-group-btn">
         <a href="#" class="btn btn-popup" onclick="openREXMedia(1);return false;" title="ÖFFNEN">
         	<i class="rex-icon rex-icon-open-mediapool"></i>
@@ -248,7 +388,7 @@ $content .= '
         </h2>
       </div>
      <div class="modal-body"> 
-            <p>X-Powered-By kann die verwendete PHP Version zurückgeben und je weniger Infos ein Angreifer hat desto besser! Also: ABSCHALTEN! </p>
+            <p>Alle notewendigen Bilder werden automatisch generiert.</p>
        </div>      
     </div>
   </div>
@@ -301,7 +441,7 @@ $content .= '
         </h2>
       </div>
      <div class="modal-body"> 
-            <p>X-Powered-By kann die verwendete PHP Version zurückgeben und je weniger Infos ein Angreifer hat desto besser! Also: ABSCHALTEN! </p>
+            <p>Sollicitudin amet mollis ligula nibh viverra penatibus ultricies varius elementum nam aliquam congue inceptos, etiam quis urna elit dis ridiculus molestie consectetur orci lacus eros fames. Lectus ornare mollis dictumst gravida class habitasse elit dis, vel facilisis quis tincidunt augue dolor sit aenean consectetur, praesent vulputate feugiat ipsum facilisi felis etiam.</p>
        </div>      
     </div>
   </div>
@@ -311,11 +451,76 @@ $content .= '
 $content .= '</div>';
 
 
+
+// --------
+// -------- Orientation
+// --------
+
+if($this->getConfig('orientation') != '') {
+    $content .= '<div class="fieldsetwrapper_pwa green">';
+} else {
+    $content .= '<div class="fieldsetwrapper_pwa red">';
+}
+
+
+$content .= '<fieldset>';
+$content .= '<legend>Orientation';
+$content .= '<a class="help-block rex-note" data-toggle="modal" href="#orientation">(Mehr Informationen)</a>';
+$content .= '</legend>';
+
+$error = $this->getConfig('orientation') == '' ? 'error' : '';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="orientation">Auswahl<sup>*</sup></label>';
+$select = new rex_select();
+$select->setId('orientation');
+$select->setAttribute('class', 'form-control '.$error.'');
+$select->setName('config[orientation]');
+$select->addOption('Bitte wählen', '');
+$select->addOption('Portrait', 'portrait');
+$select->addOption('Landscape', 'landscape');
+$select->setSelected($this->getConfig('orientation'));
+$n['field'] = $select->get();
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/form.php');
+
+$content .= '</fieldset>';
+
+$content .= ' 
+<div class="modal fade" id="orientation" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Orientation
+        <span class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+        </h2>
+      </div>
+     <div class="modal-body">
+            <p><b>Portrait</b><br/>
+                Egestas id vulputate magna in tempus porttitor ligula sit, senectus parturient himenaeos ultricies per ut sagittis varius, arcu aptent elit vestibulum potenti adipiscing nisi.
+            </p>
+            <p><b>Landscape</b><br/>
+                Egestas id vulputate magna in tempus porttitor ligula sit, senectus parturient himenaeos ultricies per ut sagittis varius, arcu aptent elit vestibulum potenti adipiscing nisi.
+            </p>
+       </div>      
+    </div>
+  </div>
+</div>
+';
+
+$content .= '</div>';
+
+
+
 // --------
 // -------- Display Mode
 // --------
 
-if($this->getConfig('display_mode') != '') {
+if($this->getConfig('display') != '') {
     $content .= '<div class="fieldsetwrapper_pwa green">';
 } else {
     $content .= '<div class="fieldsetwrapper_pwa red">';
@@ -331,17 +536,17 @@ $error = $this->getConfig('display_mode') == '' ? 'error' : '';
 
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="display_mode">Auswahl<sup>*</sup></label>';
+$n['label'] = '<label for="display">Auswahl<sup>*</sup></label>';
 $select = new rex_select();
-$select->setId('display_mode');
+$select->setId('display');
 $select->setAttribute('class', 'form-control '.$error.'');
-$select->setName('config[display_mode]');
+$select->setName('config[display]');
 $select->addOption('Bitte wählen', '');
-$select->addOption('Standalone', 'Standalone');
-$select->addOption('Fullscreen', 'Fullscreen');
-$select->addOption('Minimal-UI', 'Minimal-UI');
-$select->addOption('Browser', 'Browser');
-$select->setSelected($this->getConfig('display_mode'));
+$select->addOption('Standalone', 'standalone');
+$select->addOption('Fullscreen', 'fullscreen');
+$select->addOption('Minimal-UI', 'minimal-ui');
+$select->addOption('Browser', 'browser');
+$select->setSelected($this->getConfig('display'));
 $n['field'] = $select->get();
 $formElements[] = $n;
 
@@ -382,8 +587,6 @@ $content .= '
 ';
 
 $content .= '</div>';
-
-
 
 
 $formElements = [];
@@ -441,6 +644,18 @@ echo $content;
         zoom: 0.75;
         margin: -90px 0 60px 0;
     }
+    .fieldsetwrapper_pwa .colorpicker {
+        width: 60px;
+        height: 42px;
+        margin-right: 12px;
+        float: left;
+    }
+    .fieldsetwrapper_pwa .form-control.color {
+        margin-top: 3px;
+        width:  100px !important;
+        float: left;
+    }
+
 
     .fieldsetwrapper_pwa .fb_check label input[type=checkbox].toggle {
         margin-right: 8px;
@@ -539,3 +754,25 @@ echo $content;
         }
     }
 </style>
+<script>
+    $('#colorpicker_background').on('input', function() {
+        $('#hexcolor-background').val(this.value);
+    });
+    $('#hexcolor-background').on('input', function() {
+        $('#colorpicker_background').val(this.value);
+    });
+
+    $('#colorpicker_theme').on('input', function() {
+        $('#hexcolor-theme').val(this.value);
+    });
+    $('#hexcolor-theme').on('input', function() {
+        $('#colorpicker_theme').val(this.value);
+    });
+
+    $('#colorpicker_generated').on('input', function() {
+        $('#hexcolor-generated').val(this.value);
+    });
+    $('#hexcolor-generated').on('input', function() {
+        $('#colorpicker_generated').val(this.value);
+    });
+</script>

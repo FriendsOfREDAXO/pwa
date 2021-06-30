@@ -12,6 +12,9 @@ page:
     config:
       title: 'Einstellungen'
       icon: rex-icon fa-wrench
+      subpages:
+        manifest: { title: "manifest.json" }
+        serviceworker: { title: "service-worker.js"}
     help:
       title: "Info"
       icon: rex-icon fa-info
