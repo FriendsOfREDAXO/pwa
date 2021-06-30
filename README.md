@@ -27,7 +27,7 @@
 * testen, testen, testen
 * Anleitung schreiben
 
-### manifgest.json
+### manifest.json
 
 * 
 
