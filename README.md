@@ -13,3 +13,7 @@
 * Mehrsprachigkeit berücksichtigen
 * Farben config vorausfüllen
 * manifest und serviceworker umbenennen?
+
+# Mögliche Fehler
+
+* es gibt schon eine manifest.json (evtl. mit anderen Namen)
