@@ -36,17 +36,6 @@
 * Problem: caching Dateien
 * scope?
 
-## Weitere Ideen
-
-* Caching und Caching-Policy wählbar
-* Caching auf Kategorie/Artikel-Ebene überschreibbar
-* Install-Prompt bei Android
-* Default fixed positionierter Button for iOS ein- und ausschaltbar
-* Kopplung an YCom für Intranet Features
-* Mehrsprachigkeit berücksichtigen
-* Multidomains berücksichtigen... wie?
-
-
 ## Sonstiges
 
 ### Lizenz
